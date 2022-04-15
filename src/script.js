@@ -2,7 +2,7 @@
 const Navbar = () => {
     return (
         <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-        STOP WATCH NAVBAR
+       STOPWATCH
         </nav>
     )
 }
@@ -10,8 +10,11 @@ const Navbar = () => {
 // FOOTER
 const Footer = () => {
     return(
-        <div className="border-bottom py-2 my-3 text-center">
-             by <a href="https://confident-murdock-8e5bba.netlify.app/" target="_blank" rel="noopener noreferrer">Francis Artemio Landia</a> 2022
+        <div className="py-2 my-4 text-center" style={{color: 'white'}}>
+             <p>ReactJs practice by: </p>
+
+             <p><a href="https://confident-murdock-8e5bba.netlify.app/" target="_blank" rel="noopener noreferrer">Francis Artemio Landia</a></p>
+             <span>2022</span>
         </div>
     );
 };
@@ -19,7 +22,7 @@ const Footer = () => {
 // TEMPLATE
 const Template = props => {
     return (
-        <div>
+        <React.Fragment>
             <Navbar/>
                 <div className="container">
                     <div className="row overflow">
@@ -30,8 +33,7 @@ const Template = props => {
                     </div>
                 </div>
             <Footer/>
-        </div>
-
+        </React.Fragment>
     )
 }
 
@@ -42,6 +44,40 @@ class StopWatch extends React.Component {
         this.state = {
             timePassedInMilliSeconds: 0
         }
+
+        this.timer = null;
+
+        this.start = this.start.bind(this);
+        this.stop = this.stop.bind(this);
+        this.reset = this.reset.bind(this);
+    };
+
+    start() {
+        if(!this.timer) {
+            let startTime = Date.now();
+            this.timer = setInterval( () => {
+                const stopTime = Date.now();
+                const timePassedInMilliSeconds = stopTime - startTime + this.state.timePassedInMilliSeconds;
+
+                this.setState({
+                    timePassedInMilliSeconds,
+                })
+
+                startTime = stopTime;
+            }, 250);
+        }
+    }
+
+    stop() {
+        window.clearInterval(this.timer);
+        this.timer = null;
+    }
+
+    reset() {
+        this.stop();
+        this.setState({
+            timePassedInMilliSeconds: 0,
+        });
     };
 
     render() {
@@ -51,9 +87,9 @@ class StopWatch extends React.Component {
                     {Math.floor(this.state.timePassedInMilliSeconds / 1000)}s
                 </h2>
                     <div className="d-flex justify-content-center">
-                        <button className="btn btn-outline-primary mr-2">START</button>
-                        <button className="btn btn-outline-danger mr-2">STOP</button>
-                        <button className="btn btn-outline-warning">RESET</button>
+                        <button className="btn btn-outline-primary mr-2" onClick={this.start}>START</button>
+                        <button className="btn btn-outline-danger mr-2" onClick={this.stop}>STOP</button>
+                        <button className="btn btn-outline-warning" onClick={this.reset}>RESET</button>
                     </div>
                 
             </div>
@@ -64,9 +100,7 @@ class StopWatch extends React.Component {
 
 const App = () => {
     return (
-        <React.Fragment>
         <Template/>
-        </React.Fragment>
     )
 }
 

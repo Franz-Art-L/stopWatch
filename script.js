@@ -11,7 +11,7 @@ var Navbar = function Navbar() {
     return React.createElement(
         "nav",
         { className: "navbar navbar-expand-md navbar-dark bg-dark" },
-        "STOP WATCH NAVBAR"
+        "STOPWATCH"
     );
 };
 
@@ -19,21 +19,33 @@ var Navbar = function Navbar() {
 var Footer = function Footer() {
     return React.createElement(
         "div",
-        { className: "border-bottom py-2 my-3 text-center" },
-        "by ",
+        { className: "py-2 my-4 text-center", style: { color: 'white' } },
         React.createElement(
-            "a",
-            { href: "https://confident-murdock-8e5bba.netlify.app/", target: "_blank", rel: "noopener noreferrer" },
-            "Francis Artemio Landia"
+            "p",
+            null,
+            "ReactJs practice by: "
         ),
-        " 2022"
+        React.createElement(
+            "p",
+            null,
+            React.createElement(
+                "a",
+                { href: "https://confident-murdock-8e5bba.netlify.app/", target: "_blank", rel: "noopener noreferrer" },
+                "Francis Artemio Landia"
+            )
+        ),
+        React.createElement(
+            "span",
+            null,
+            "2022"
+        )
     );
 };
 
 // TEMPLATE
 var Template = function Template(props) {
     return React.createElement(
-        "div",
+        React.Fragment,
         null,
         React.createElement(Navbar, null),
         React.createElement(
@@ -65,10 +77,49 @@ var StopWatch = function (_React$Component) {
         _this.state = {
             timePassedInMilliSeconds: 0
         };
+
+        _this.timer = null;
+
+        _this.start = _this.start.bind(_this);
+        _this.stop = _this.stop.bind(_this);
+        _this.reset = _this.reset.bind(_this);
         return _this;
     }
 
     _createClass(StopWatch, [{
+        key: "start",
+        value: function start() {
+            var _this2 = this;
+
+            if (!this.timer) {
+                var startTime = Date.now();
+                this.timer = setInterval(function () {
+                    var stopTime = Date.now();
+                    var timePassedInMilliSeconds = stopTime - startTime + _this2.state.timePassedInMilliSeconds;
+
+                    _this2.setState({
+                        timePassedInMilliSeconds: timePassedInMilliSeconds
+                    });
+
+                    startTime = stopTime;
+                }, 250);
+            }
+        }
+    }, {
+        key: "stop",
+        value: function stop() {
+            window.clearInterval(this.timer);
+            this.timer = null;
+        }
+    }, {
+        key: "reset",
+        value: function reset() {
+            this.stop();
+            this.setState({
+                timePassedInMilliSeconds: 0
+            });
+        }
+    }, {
         key: "render",
         value: function render() {
             return React.createElement(
@@ -85,17 +136,17 @@ var StopWatch = function (_React$Component) {
                     { className: "d-flex justify-content-center" },
                     React.createElement(
                         "button",
-                        { className: "btn btn-outline-primary mr-2" },
+                        { className: "btn btn-outline-primary mr-2", onClick: this.start },
                         "START"
                     ),
                     React.createElement(
                         "button",
-                        { className: "btn btn-outline-danger mr-2" },
+                        { className: "btn btn-outline-danger mr-2", onClick: this.stop },
                         "STOP"
                     ),
                     React.createElement(
                         "button",
-                        { className: "btn btn-outline-warning" },
+                        { className: "btn btn-outline-warning", onClick: this.reset },
                         "RESET"
                     )
                 )
@@ -107,11 +158,7 @@ var StopWatch = function (_React$Component) {
 }(React.Component);
 
 var App = function App() {
-    return React.createElement(
-        React.Fragment,
-        null,
-        React.createElement(Template, null)
-    );
+    return React.createElement(Template, null);
 };
 
 ReactDOM.render(React.createElement(App, null), document.getElementById('root'));
