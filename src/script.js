@@ -1,3 +1,5 @@
+const {useState, useRef, useEffect, ReactDOM} = React;
+
 // Navbar
 const Navbar = () => {
     return (
@@ -37,65 +39,44 @@ const Template = props => {
     )
 }
 
-class StopWatch extends React.Component {
-    constructor(props) {
-        super(props);
+const StopWatch = () => {
+    const [timePassedInMilliSeconds, setTimePassedInMilliSeconds] = useState(0);
 
-        this.state = {
-            timePassedInMilliSeconds: 0
-        }
+    const timer = useRef(null);
 
-        this.timer = null;
+    return(
+        <div>
 
-        this.start = this.start.bind(this);
-        this.stop = this.stop.bind(this);
-        this.reset = this.reset.bind(this);
-    };
+            <h2 className="border px-3 py-4 rounded my-3 mx-auto text-center" style={{maxWidth: "300px"}}>
 
-    start() {
-        if(!this.timer) {
-            let startTime = Date.now();
-            this.timer = setInterval( () => {
-                const stopTime = Date.now();
-                const timePassedInMilliSeconds = stopTime - startTime + this.state.timePassedInMilliSeconds;
+            {Math.floor(this.state.timePassedInMilliSeconds / 1000)} s
 
-                this.setState({
-                    timePassedInMilliSeconds,
-                })
+            </h2>
 
-                startTime = stopTime;
-            }, 250);
-        }
-    }
+            <div className="d-flex justify-content-center">
 
-    stop() {
-        window.clearInterval(this.timer);
-        this.timer = null;
-    }
+            <button className="btn btn-outline-primary mr-2" onClick={this.start}>
 
-    reset() {
-        this.stop();
-        this.setState({
-            timePassedInMilliSeconds: 0,
-        });
-    };
+                start
 
-    render() {
-        return(
-            <div>
-                <h2 className="border px-3 py-4 rounded my-3 mx-auto text-center" style={{maxWidth: "300px"}}>
-                    {Math.floor(this.state.timePassedInMilliSeconds / 1000)}s
-                </h2>
-                    <div className="d-flex justify-content-center">
-                        <button className="btn btn-outline-primary mr-2" onClick={this.start}>START</button>
-                        <button className="btn btn-outline-danger mr-2" onClick={this.stop}>STOP</button>
-                        <button className="btn btn-outline-warning" onClick={this.reset}>RESET</button>
-                    </div>
-                
+            </button>
+
+            <button className="btn btn-outline-danger mr-2" onClick={this.stop}>
+
+                stop
+
+            </button>
+
+            <button className="btn btn-outline-warning" onClick={this.reset}>
+
+                reset
+
+            </button>
+
             </div>
-        )
-    }
 
+        </div>
+    )
 }
 
 const App = () => {
